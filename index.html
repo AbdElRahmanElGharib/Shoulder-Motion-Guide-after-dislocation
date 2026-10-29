@@ -1,0 +1,500 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Shoulder Motion Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: a goniometer chart. Stage rail on top, four animated motion dials, then weight, activities, rules. */
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --ink: #17222e;
+  --muted: #5a6876;
+  --line: #d6dde4;
+  --figure: #2a3a4a;
+  --go: #1f8a4c;
+  --go-soft: rgba(31,138,76,.16);
+  --care: #b7791f;
+  --care-soft: rgba(183,121,31,.18);
+  --stop: #c53030;
+  --stop-soft: rgba(197,48,48,.10);
+  --accent: #2b6cb0;
+  --accent-soft: rgba(43,108,176,.12);
+  --font: "Atkinson Hyperlegible", Verdana, "DejaVu Sans", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10161d; --panel: #18212b; --ink: #e8eef4; --muted: #9aa8b6; --line: #2c3a48; --figure: #d5dee8;
+  --go: #48c27a; --go-soft: rgba(72,194,122,.20); --care: #e3a743; --care-soft: rgba(227,167,67,.20);
+  --stop: #f07070; --stop-soft: rgba(240,112,112,.13); --accent: #6aa8f0; --accent-soft: rgba(106,168,240,.16);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #10161d; --panel: #18212b; --ink: #e8eef4; --muted: #9aa8b6; --line: #2c3a48; --figure: #d5dee8;
+  --go: #48c27a; --go-soft: rgba(72,194,122,.20); --care: #e3a743; --care-soft: rgba(227,167,67,.20);
+  --stop: #f07070; --stop-soft: rgba(240,112,112,.13); --accent: #6aa8f0; --accent-soft: rgba(106,168,240,.16);
+  color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.55; letter-spacing: .01em; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-size: 20px; margin: 0 0 10px; }
+p { margin: 0; }
+.sub { color: var(--muted); max-width: 68ch; }
+.sub b { color: var(--ink); }
+
+/* stage rail */
+.rail { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; }
+.rail button { font: inherit; font-size: 14px; font-weight: 700; padding: 10px 6px; border-radius: 10px; border: 2px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; line-height: 1.25; }
+.rail button small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.rail button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.rail button:focus-visible, .ctl button:focus-visible, .ctl input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.here { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 700; color: var(--panel); background: var(--accent); border-radius: 99px; padding: 0 7px; }
+@media (max-width: 720px) { .rail { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
+.ctl { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.ctl button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 8px; border: 2px solid var(--accent); background: var(--accent); color: var(--panel); cursor: pointer; }
+.ctl button.ghost { background: transparent; color: var(--accent); }
+.ctl label { color: var(--muted); font-size: 15px; display: flex; gap: 8px; align-items: center; }
+.ctl input { font: inherit; padding: 4px 8px; border-radius: 6px; border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+
+.stagehead { background: var(--panel); border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; }
+.stagehead .t { font-size: 22px; font-weight: 700; }
+.stagehead .d { color: var(--muted); }
+
+/* motion dials */
+.dials { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+@media (max-width: 720px) { .dials { grid-template-columns: minmax(0,1fr); } }
+.dial { background: var(--panel); border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px 14px; display: grid; gap: 6px; min-width: 0; }
+.dial h3 { margin: 0; font-size: 18px; }
+.dial .how { color: var(--muted); font-size: 14.5px; }
+.dial svg { width: 100%; height: auto; max-width: 100%; display: block; }
+.verdict { font-weight: 700; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.pill { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 99px; }
+.pill.g { background: var(--go-soft); color: var(--go); }
+.pill.a { background: var(--care-soft); color: var(--care); }
+.pill.r { background: var(--stop-soft); color: var(--stop); }
+.deg { font-variant-numeric: tabular-nums; }
+
+svg .fig { stroke: var(--figure); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+svg .head { fill: var(--figure); }
+svg .zone-g { fill: var(--go-soft); stroke: var(--go); stroke-width: 2; }
+svg .zone-r { fill: var(--stop-soft); stroke: var(--stop); stroke-width: 1.5; stroke-dasharray: 5 5; }
+svg .arm { stroke-width: 9; stroke-linecap: round; fill: none; }
+svg .arm.g { stroke: var(--go); } svg .arm.a { stroke: var(--care); } svg .arm.r { stroke: var(--stop); }
+svg .lbl { fill: var(--muted); font-family: var(--font); font-size: 13px; }
+svg .lbl-strong { fill: var(--ink); font-family: var(--font); font-size: 14px; font-weight: 700; }
+svg .sling { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; }
+
+/* weight */
+.card { background: var(--panel); border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; align-content: start; }
+.wbar { position: relative; height: 26px; border-radius: 8px; background: var(--stop-soft); overflow: hidden; }
+.wfill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--go); border-radius: 8px; transition: width .6s ease; }
+.wticks { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wnote { font-weight: 700; }
+
+/* activities */
+.acts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.act { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; border: 2px solid var(--line); min-width: 0; }
+.act .dot { flex: 0 0 auto; width: 14px; height: 14px; border-radius: 50%; }
+.act.g { border-color: var(--go); } .act.g .dot { background: var(--go); }
+.act.a { border-color: var(--care); } .act.a .dot { background: var(--care); }
+.act.r { border-color: var(--line); color: var(--muted); } .act.r .dot { background: var(--stop); }
+.act span { min-width: 0; }
+
+.rules { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+@media (max-width: 720px) { .rules { grid-template-columns: minmax(0,1fr); } }
+.rules ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.tl { display: grid; gap: 8px; }
+.tl div { padding: 8px 12px; border-radius: 8px; }
+.tl .g { background: var(--go-soft); } .tl .a { background: var(--care-soft); } .tl .r { background: var(--stop-soft); }
+.foot { color: var(--muted); font-size: 14px; max-width: 80ch; }
+@media (prefers-reduced-motion: reduce) { .wfill { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <h1>Shoulder Motion Guide</h1>
+    <p class="sub">What your right shoulder may do at each stage, if you <b>don't</b> have surgery. Green = allowed. Red = not yet. Amber = carefully, or only with your physio. <b>Your physio's plan comes first.</b> If you have surgery, the clock restarts from the operation day.</p>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Recovery stage"></nav>
+
+  <div class="ctl">
+    <button id="play" type="button">Play all stages</button>
+    <button id="pause" type="button" class="ghost">Pause</button>
+    <label for="inj">Injury date <input id="inj" type="date"></label>
+    <span id="today" class="sub" style="font-size:15px"></span>
+  </div>
+
+  <section class="stagehead" aria-live="polite">
+    <div class="t" id="stTitle"></div>
+    <div class="d" id="stDesc"></div>
+  </section>
+
+  <section class="dials">
+    <article class="dial">
+      <h3>1. Raise the arm forward</h3>
+      <div class="how">Seen from the side. Like reaching for a shelf in front of you.</div>
+      <svg id="svgFlex" viewBox="0 0 320 260" role="img" aria-label="Forward raise range"></svg>
+      <div class="verdict" id="vFlex"></div>
+    </article>
+    <article class="dial">
+      <h3>2. Raise the arm to the side</h3>
+      <div class="how">Seen from the front. Like a jumping-jack arm.</div>
+      <svg id="svgAbd" viewBox="0 0 320 260" role="img" aria-label="Side raise range"></svg>
+      <div class="verdict" id="vAbd"></div>
+    </article>
+    <article class="dial">
+      <h3>3. Rotate the hand outward</h3>
+      <div class="how">Seen from above. Elbow at your side, bent 90°. Forearm swings from your belly outward.</div>
+      <svg id="svgEr" viewBox="0 0 320 260" role="img" aria-label="Outward rotation range"></svg>
+      <div class="verdict" id="vEr"></div>
+    </article>
+    <article class="dial">
+      <h3>4. The danger position</h3>
+      <div class="how">Seen from the front. Arm out to the side <b>and</b> rotated back, like throwing a ball. This is how the shoulder comes out.</div>
+      <svg id="svgCombo" viewBox="0 0 320 260" role="img" aria-label="Throwing position"></svg>
+      <div class="verdict" id="vCombo"></div>
+    </article>
+  </section>
+
+  <section class="card">
+    <h2>Most weight in the right hand</h2>
+    <div class="wbar" role="img" id="wbarLabel"><div class="wfill" id="wfill"></div></div>
+    <div class="wticks"><span>0</span><span>2 kg</span><span>4 kg</span><span>6 kg</span><span>8 kg</span><span>10+ kg</span></div>
+    <div class="wnote" id="wnote"></div>
+    <div class="sub" style="font-size:15px">Hold it close to your body. A weight held at arm's length acts several times heavier on the shoulder.</div>
+  </section>
+
+  <section class="card">
+    <h2>Your activities at this stage</h2>
+    <div class="acts" id="acts"></div>
+  </section>
+
+  <section class="rules">
+    <div class="card">
+      <h2>Check any motion: 5 questions</h2>
+      <ol>
+        <li><b>Is my elbow in front of my body?</b> In front is safe. Out to the side or behind is risky.</li>
+        <li><b>Is my hand rotating outward or behind me?</b> That is the danger direction.</li>
+        <li><b>Is it within this stage's height and weight?</b></li>
+        <li><b>Is it sudden?</b> Catching, being pulled, slipping, reaching fast are riskier.</li>
+        <li><b>Pain, or a feeling it might slip?</b> Stop.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>Traffic light</h2>
+      <div class="tl">
+        <div class="g"><b>Go:</b> elbow in front, below this stage's height, light, slow.</div>
+        <div class="a"><b>Careful:</b> near this stage's limits. Slowly, a few times only.</div>
+        <div class="r"><b>Not yet:</b> arm out and rotated back, heavy, fast, or painful.</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">General guidance for a first anterior dislocation treated without surgery. Angles and weights are typical, rounded values, not a prescription. Prepared with AI for one person's understanding; your orthopaedic surgeon and physiotherapist set your actual plan.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  // ---------- stage data ----------
+  // limits in degrees. flex/abd: 0 = arm hanging down, 180 = straight up.
+  // er: -80 = hand on belly, 0 = forearm pointing forward, 90 = pointing straight out.
+  var STAGES = [
+    { key: "w0", rail: "Weeks 0–3", small: "Sling", start: 0, end: 3,
+      title: "Weeks 0–3: in the sling",
+      desc: "The shoulder stays still. Move your fingers and wrist. The bone chip is healing.",
+      flex: { lim: 0, s: "r", note: "None. Arm stays in the sling." },
+      abd:  { lim: 0, s: "r", note: "None. Arm stays in the sling." },
+      er:   { lim: -80, s: "r", note: "None. Hand stays on your belly." },
+      combo: { s: "r", note: "Not yet." },
+      kg: 0.3, kgNote: "Only light things the hand can hold while in the sling: a phone, a cup." },
+    { key: "w3", rail: "Weeks 3–4", small: "With help", start: 3, end: 4,
+      title: "Weeks 3–4: gentle movement, with help",
+      desc: "The sling comes off for exercises. The physio, or your other hand, moves the arm for you.",
+      flex: { lim: 70, s: "a", note: "To chest height, only with help." },
+      abd:  { lim: 30, s: "a", note: "A little, only with help." },
+      er:   { lim: 0, s: "a", note: "Up to pointing straight forward." },
+      combo: { s: "r", note: "Not yet." },
+      kg: 0.5, kgNote: "About 0.5 kg: a cup of tea." },
+    { key: "w4", rail: "Weeks 4–6", small: "On your own", start: 4, end: 6,
+      title: "Weeks 4–6: moving on your own, low",
+      desc: "You move the arm yourself, below shoulder height, slowly.",
+      flex: { lim: 90, s: "g", note: "To shoulder height." },
+      abd:  { lim: 60, s: "g", note: "Partway out, below shoulder height." },
+      er:   { lim: 30, s: "g", note: "A little past forward, about 30°." },
+      combo: { s: "r", note: "Not yet." },
+      kg: 2, kgNote: "About 1–2 kg: a water bottle, a small bag." },
+    { key: "w6", rail: "Weeks 6–8", small: "Overhead", start: 6, end: 8,
+      title: "Weeks 6–8: overhead, slowly; strengthening starts",
+      desc: "Forward above your head is allowed. Light strengthening begins.",
+      flex: { lim: 160, s: "g", note: "Above your head, slowly." },
+      abd:  { lim: 90, s: "g", note: "To shoulder height." },
+      er:   { lim: 45, s: "g", note: "About 45°, only with the elbow at your side." },
+      combo: { s: "r", note: "Not yet." },
+      kg: 5, kgNote: "About 3–5 kg, close to the body." },
+    { key: "w8", rail: "Weeks 8–12", small: "Full range", start: 8, end: 12,
+      title: "Weeks 8–12: full range, one direction at a time",
+      desc: "Full movement in each single direction. The combined throwing position only in physio.",
+      flex: { lim: 180, s: "g", note: "Full." },
+      abd:  { lim: 170, s: "g", note: "Full." },
+      er:   { lim: 90, s: "g", note: "Full, elbow at your side." },
+      combo: { s: "a", note: "Only in physio, controlled." },
+      kg: 10, kgNote: "About 5–10 kg, close to the body." },
+    { key: "w12", rail: "Weeks 12–16", small: "Light gym", start: 12, end: 16,
+      title: "Weeks 12–16: light gym, building up",
+      desc: "Bands, then light weights. The throwing position is trained gradually.",
+      flex: { lim: 180, s: "g", note: "Full." },
+      abd:  { lim: 170, s: "g", note: "Full." },
+      er:   { lim: 90, s: "g", note: "Full." },
+      combo: { s: "a", note: "Gradually, under control." },
+      kg: 10, kgNote: "Light gym weights, building up." },
+    { key: "m4", rail: "Months 4–6", small: "Sport", start: 16, end: 26,
+      title: "Months 4–6: sport and heavy gym",
+      desc: "Only once you have full movement, good strength, and no feeling that it might slip.",
+      flex: { lim: 180, s: "g", note: "Full." },
+      abd:  { lim: 170, s: "g", note: "Full." },
+      er:   { lim: 90, s: "g", note: "Full." },
+      combo: { s: "g", note: "Allowed when your physio clears you." },
+      kg: 12, kgNote: "Full, as your strength allows." }
+  ];
+  var ACTS = [
+    ["Washing hands", "rgggggg"],
+    ["Mouse, slow, forearm resting on the desk (out of the sling)", "raggggg"],
+    ["Gentle handshake", "raggggg"],
+    ["Wudu: wiping the head with the right hand", "rrggggg"],
+    ["Fast mouse flicks (gaming)", "rragggg"],
+    ["Pot with both hands, light", "rrrgggg"],
+    ["Screwing at bench height", "rrrgggg"],
+    ["Pot with both hands, heavy", "rrrragg"],
+    ["Heavy bag in the right hand", "rrrragg"],
+    ["Backpack, both straps (left arm in first)", "rrrragg"],
+    ["Screwing overhead", "rrrrrgg"],
+    ["Gym: bands and light weights", "rrrrrag"],
+    ["Full gym, padel / tennis", "rrrrrrg"]
+  ];
+  var WORD = { g: "Allowed", a: "Carefully / with physio", r: "Not yet" };
+
+  // ---------- helpers ----------
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function rad(d) { return d * Math.PI / 180; }
+  function sector(cx, cy, r, a0, a1, pt, sweep) {
+    var p0 = pt(cx, cy, r, a0), p1 = pt(cx, cy, r, a1);
+    var large = Math.abs(a1 - a0) > 180 ? 1 : 0;
+    return "M" + cx + " " + cy + " L" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) + " A" + r + " " + r + " 0 " + large + " " + sweep + " " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) + " Z";
+  }
+  var reduced = false;
+  try { reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+
+  // ---------- panel 1: forward raise (side view, facing right) ----------
+  var F = (function () {
+    var s = document.getElementById("svgFlex");
+    var sx = 130, sy = 82, R = 92;
+    var pt = function (cx, cy, r, a) { return [cx + r * Math.sin(rad(a)), cy + r * Math.cos(rad(a))]; };
+    var zr = el("path", { "class": "zone-r" }, s), zg = el("path", { "class": "zone-g" }, s);
+    // figure
+    el("circle", { cx: sx, cy: 40, r: 17, "class": "head" }, s);
+    el("path", { d: "M" + (sx + 14) + " 38 l8 4", "class": "fig", "stroke-width": 4 }, s);
+    el("path", { d: "M" + sx + " 60 L" + sx + " 170 L" + (sx - 6) + " 248 M" + sx + " 170 L" + (sx + 10) + " 248", "class": "fig" }, s);
+    el("text", { x: 236, y: 140, "class": "lbl" }, s).textContent = "front →";
+    var sling = el("path", { d: "M" + (sx - 4) + " 62 L" + (sx + 30) + " 150 L" + (sx + 4) + " 150", "class": "sling" }, s);
+    var arm = el("line", { x1: sx, y1: sy, "class": "arm g" }, s);
+    var deg = el("text", { x: 168, y: 250, "class": "lbl-strong deg" }, s);
+    return {
+      set: function (st) {
+        var lim = st.flex.lim;
+        zg.setAttribute("d", lim > 0 ? sector(sx, sy, R, 0, lim, pt, 0) : "");
+        zr.setAttribute("d", lim < 180 ? sector(sx, sy, R, lim, 180, pt, 0) : "");
+        sling.style.display = lim === 0 ? "" : "none";
+        arm.setAttribute("class", "arm " + (lim === 0 ? "r" : st.flex.s));
+      },
+      draw: function (st, k) {
+        var lim = st.flex.lim, a = lim * k, p = pt(sx, sy, 78, a);
+        if (lim === 0) { arm.setAttribute("x2", sx + 22); arm.setAttribute("y2", sy + 50); deg.textContent = "0° (in sling)"; return; }
+        arm.setAttribute("x2", p[0]); arm.setAttribute("y2", p[1]);
+        deg.textContent = Math.round(a) + "° of " + lim + "°";
+      }
+    };
+  })();
+
+  // ---------- panel 2: side raise (front view, his right arm on viewer's left) ----------
+  var A = (function () {
+    var s = document.getElementById("svgAbd");
+    var cx = 180, sx = 156, sy = 82, R = 92;
+    var pt = function (x, y, r, a) { return [x - r * Math.sin(rad(a)), y + r * Math.cos(rad(a))]; };
+    var zr = el("path", { "class": "zone-r" }, s), zg = el("path", { "class": "zone-g" }, s);
+    el("circle", { cx: cx, cy: 40, r: 17, "class": "head" }, s);
+    el("path", { d: "M" + sx + " " + sy + " L" + (cx + 24) + " " + sy + " M" + cx + " 60 L" + cx + " 170 L" + (cx - 14) + " 248 M" + cx + " 170 L" + (cx + 14) + " 248 M" + (cx + 24) + " " + sy + " L" + (cx + 30) + " 160", "class": "fig" }, s);
+    el("text", { x: 14, y: 250, "class": "lbl" }, s).textContent = "← his right arm";
+    var sling = el("path", { d: "M" + (sx + 2) + " 84 L" + (sx + 2) + " 140 L" + (cx + 8) + " 140", "class": "sling" }, s);
+    var arm = el("line", { x1: sx, y1: sy, "class": "arm g" }, s);
+    var deg = el("text", { x: 214, y: 26, "class": "lbl-strong deg" }, s);
+    return {
+      set: function (st) {
+        var lim = st.abd.lim;
+        zg.setAttribute("d", lim > 0 ? sector(sx, sy, R, 0, lim, pt, 1) : "");
+        zr.setAttribute("d", lim < 180 ? sector(sx, sy, R, lim, 180, pt, 1) : "");
+        sling.style.display = lim === 0 ? "" : "none";
+        arm.setAttribute("class", "arm " + (lim === 0 ? "r" : st.abd.s));
+      },
+      draw: function (st, k) {
+        var lim = st.abd.lim, a = lim * k, p = pt(sx, sy, 78, a);
+        if (lim === 0) { arm.setAttribute("x2", sx); arm.setAttribute("y2", sy + 56); deg.textContent = "0° (in sling)"; return; }
+        arm.setAttribute("x2", p[0]); arm.setAttribute("y2", p[1]);
+        deg.textContent = Math.round(a) + "° of " + lim + "°";
+      }
+    };
+  })();
+
+  // ---------- panel 3: outward rotation (top view, facing up) ----------
+  var E = (function () {
+    var s = document.getElementById("svgEr");
+    var cx = 140, cy = 168, ex = 204, ey = 152, R = 86, MIN = -80;
+    // forearm angle: 0 = forward (up on screen), +90 = outward (right), -80 = across belly (left)
+    var pt = function (x, y, r, a) { return [x + r * Math.sin(rad(a)), y - r * Math.cos(rad(a))]; };
+    var zr = el("path", { "class": "zone-r" }, s), zg = el("path", { "class": "zone-g" }, s);
+    el("ellipse", { cx: cx, cy: cy, rx: 62, ry: 20, fill: "none", "class": "fig", "stroke-width": 5 }, s);
+    el("circle", { cx: cx, cy: cy + 2, r: 15, "class": "head" }, s);
+    el("path", { d: "M" + (cx - 5) + " " + (cy - 11) + " L" + cx + " " + (cy - 20) + " L" + (cx + 5) + " " + (cy - 11) + " Z", "class": "head" }, s);
+    el("path", { d: "M" + (cx + 60) + " " + (cy - 4) + " L" + ex + " " + ey, "class": "fig", "stroke-width": 5 }, s);
+    el("circle", { cx: ex, cy: ey, r: 7, "class": "head" }, s);
+    el("text", { x: cx - 22, y: 22, "class": "lbl" }, s).textContent = "front ↑";
+    el("text", { x: 236, y: 186, "class": "lbl" }, s).textContent = "outward →";
+    el("text", { x: 20, y: 130, "class": "lbl" }, s).textContent = "← belly";
+    var arm = el("line", { x1: ex, y1: ey, "class": "arm g" }, s);
+    var deg = el("text", { x: 14, y: 250, "class": "lbl-strong deg" }, s);
+    return {
+      set: function (st) {
+        var lim = st.er.lim;
+        zg.setAttribute("d", lim > MIN ? sector(ex, ey, R, MIN, lim, pt, 1) : "");
+        zr.setAttribute("d", lim < 90 ? sector(ex, ey, R, lim, 90, pt, 1) : "");
+        arm.setAttribute("class", "arm " + (lim <= MIN ? "r" : st.er.s));
+      },
+      draw: function (st, k) {
+        var lim = st.er.lim, a = MIN + (lim - MIN) * k, p = pt(ex, ey, 70, a);
+        arm.setAttribute("x2", p[0]); arm.setAttribute("y2", p[1]);
+        deg.textContent = lim <= MIN ? "" : (a < 0 ? "toward belly" : Math.round(a) + "° outward") + "  ·  limit: " + (lim <= 0 ? "pointing forward" : lim + "° outward");
+      }
+    };
+  })();
+
+  // ---------- panel 4: throwing position (front view) ----------
+  var C = (function () {
+    var s = document.getElementById("svgCombo");
+    var cx = 180, sx = 156, sy = 92;
+    el("circle", { cx: cx, cy: 50, r: 17, "class": "head" }, s);
+    el("path", { d: "M" + sx + " " + sy + " L" + (cx + 24) + " " + sy + " M" + cx + " 70 L" + cx + " 178 L" + (cx - 14) + " 252 M" + cx + " 178 L" + (cx + 14) + " 252 M" + (cx + 24) + " " + sy + " L" + (cx + 30) + " 168", "class": "fig" }, s);
+    var upper = el("line", { x1: sx, y1: sy, "class": "arm r" }, s);
+    var fore = el("line", { "class": "arm r" }, s);
+    var hand = el("circle", { r: 7, "class": "head" }, s);
+    var badge = el("text", { x: 14, y: 26, "class": "lbl-strong" }, s);
+    var arrow = el("path", { d: "", fill: "none", "stroke-width": 3, "stroke-dasharray": "6 5" }, s);
+    return {
+      set: function (st) { var c = st.combo.s; upper.setAttribute("class", "arm " + c); fore.setAttribute("class", "arm " + c); arrow.setAttribute("stroke", "var(--" + (c === "g" ? "go" : c === "a" ? "care" : "stop") + ")"); },
+      draw: function (st, k) {
+        // 0..0.5: raise arm sideways to 90; 0.5..1: forearm rotates back to vertical
+        var a1 = Math.min(1, k * 2) * 90, a2 = Math.max(0, k * 2 - 1);
+        var ex = sx - 70 * Math.sin(rad(a1)), ey = sy + 70 * Math.cos(rad(a1));
+        upper.setAttribute("x2", ex); upper.setAttribute("y2", ey);
+        // forearm: before rotation it points toward the viewer (short); then swings up to vertical
+        var len = 12 + 46 * a2;
+        var fx = ex, fy = ey - len;
+        fore.setAttribute("x1", ex); fore.setAttribute("y1", ey); fore.setAttribute("x2", fx); fore.setAttribute("y2", fy);
+        hand.setAttribute("cx", fx); hand.setAttribute("cy", fy);
+        arrow.setAttribute("d", a2 > 0.05 ? "M" + (ex - 20) + " " + (ey - 8) + " Q" + (ex - 40) + " " + (ey - 40) + " " + (ex - 14) + " " + (ey - 62) : "");
+        var c = st.combo.s;
+        badge.textContent = c === "r" ? "✕  NOT YET" : c === "a" ? "!  ONLY WITH PHYSIO" : "✓  ALLOWED";
+        badge.setAttribute("style", "fill: var(--" + (c === "g" ? "go" : c === "a" ? "care" : "stop") + ")");
+      }
+    };
+  })();
+
+  // ---------- UI ----------
+  var rail = document.getElementById("rail");
+  var cur = 0, playing = false, playTimer = null, hereIdx = -1;
+  STAGES.forEach(function (st, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.id = "stage-" + st.key;
+    b.innerHTML = st.rail + "<small>" + st.small + "</small>";
+    b.addEventListener("click", function () { stopPlay(); select(i); });
+    rail.appendChild(b);
+  });
+  function verdict(id, part) {
+    document.getElementById(id).innerHTML = '<span class="pill ' + part.s + '">' + WORD[part.s] + "</span><span>" + part.note + "</span>";
+  }
+  function select(i) {
+    cur = i; var st = STAGES[i];
+    Array.prototype.forEach.call(rail.children, function (b, j) {
+      b.setAttribute("aria-pressed", j === i ? "true" : "false");
+      var h = b.querySelector(".here"); if (h) h.remove();
+      if (j === hereIdx) { var t = document.createElement("span"); t.className = "here"; t.textContent = "You are here"; b.appendChild(t); }
+    });
+    document.getElementById("stTitle").textContent = st.title;
+    document.getElementById("stDesc").textContent = st.desc;
+    F.set(st); A.set(st); E.set(st); C.set(st);
+    verdict("vFlex", st.flex.lim === 0 ? { s: "r", note: st.flex.note } : st.flex);
+    verdict("vAbd", st.abd.lim === 0 ? { s: "r", note: st.abd.note } : st.abd);
+    verdict("vEr", st.er.lim <= -80 ? { s: "r", note: st.er.note } : st.er);
+    verdict("vCombo", st.combo);
+    var pct = Math.min(100, st.kg / 10 * 100);
+    document.getElementById("wfill").style.width = pct + "%";
+    document.getElementById("wnote").textContent = st.kgNote;
+    document.getElementById("wbarLabel").setAttribute("aria-label", "Maximum weight: " + st.kgNote);
+    var box = document.getElementById("acts"); box.innerHTML = "";
+    ACTS.forEach(function (a) {
+      var s = a[1].charAt(i), d = document.createElement("div");
+      d.className = "act " + s;
+      d.innerHTML = '<span class="dot" aria-hidden="true"></span><span><b>' + WORD[s] + ":</b> " + a[0] + "</span>";
+      box.appendChild(d);
+    });
+    if (reduced) drawAll(1);
+  }
+  function drawAll(k) { var st = STAGES[cur]; F.draw(st, k); A.draw(st, k); E.draw(st, k); C.draw(st, k); }
+
+  // animation: sweep 0 -> limit, hold, back, hold
+  var t0 = null, CYCLE = 4200;
+  function ease(x) { return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+  function frame(ts) {
+    if (t0 === null) t0 = ts;
+    var p = ((ts - t0) % CYCLE) / CYCLE, k;
+    if (p < .4) k = ease(p / .4); else if (p < .65) k = 1; else if (p < .9) k = 1 - ease((p - .65) / .25); else k = 0;
+    drawAll(k);
+    requestAnimationFrame(frame);
+  }
+
+  function stopPlay() { playing = false; if (playTimer) clearInterval(playTimer); playTimer = null; }
+  document.getElementById("play").addEventListener("click", function () {
+    stopPlay(); playing = true; select(0); t0 = null;
+    playTimer = setInterval(function () { if (cur >= STAGES.length - 1) { stopPlay(); return; } select(cur + 1); t0 = null; }, CYCLE * 2);
+  });
+  document.getElementById("pause").addEventListener("click", stopPlay);
+
+  // injury date -> "you are here"
+  var inj = document.getElementById("inj");
+  function weeksSince(d) { return (Date.now() - d.getTime()) / (7 * 864e5); }
+  function applyDate(v, jump) {
+    hereIdx = -1; var out = document.getElementById("today");
+    if (v) {
+      var d = new Date(v + "T00:00:00");
+      if (!isNaN(d)) {
+        var w = weeksSince(d);
+        out.textContent = w >= 0 ? "Today is week " + Math.floor(w + 1) + " after the injury." : "";
+        for (var i = 0; i < STAGES.length; i++) if (w >= STAGES[i].start && w < STAGES[i].end) hereIdx = i;
+        if (w >= 26) hereIdx = STAGES.length - 1;
+      }
+    } else out.textContent = "";
+    select(jump && hereIdx >= 0 ? hereIdx : cur);
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("injuryDate"); } catch (e) {}
+  inj.value = saved || "2026-10-06";
+  inj.addEventListener("change", function () { try { localStorage.setItem("injuryDate", inj.value); } catch (e) {} applyDate(inj.value, true); });
+  applyDate(inj.value, true);
+
+  if (!reduced) requestAnimationFrame(frame); else drawAll(1);
+})();
+</script>
+
+</body></html>
